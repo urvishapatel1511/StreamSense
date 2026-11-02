@@ -509,6 +509,20 @@ Free Render can sleep and lose in-memory sessions on restarts; Workers Free has 
 
 After the user authorized the required deployment work, the 20-file hosting change was committed on main as `76e73c8` (Prepare free Cloudflare and Render deployment). The complete 59-file Git index passed credential-value and excluded-path checks before committing. `git push -u origin main` succeeded, created remote main and set local main to track origin/main; the earlier initial app commit was included. No force push, paid resource, cloud deployment or Devpost submission was performed. Source upload is complete; owner account setup, real service URLs and hosted acceptance remain pending. Deployment/connection instructions are in DEPLOYMENT.md, and private credentials should be entered only at their intended providers.
 
+## Render verification and Cloudflare publication
+
+The owner deployed Render and supplied `https://streamsense-bgqp.onrender.com`. Direct checks returned HTTP 200 for `/api/health` with status ok and `/` with the StreamSense title. An isolated `verify:demo` session on that HTTPS origin passed all 28-message metrics, Busy activity, immediate generation/clearing and a real five-second scheduled batch, then removed its own session. The script now accepts a validated HTTPS STREAMSENSE_VERIFY_URL while preserving its localhost default.
+
+`wrangler.jsonc` now contains that actual public backend origin. Its dry-run passed with only the public BACKEND_ORIGIN binding. Cloudflare was initially unauthenticated; the owner personally completed Firefox authorization and the CLI reported Successfully logged in. The final requested scopes were account/user read plus Worker/script write; unrelated product scopes were excluded. A first narrowed attempt incorrectly supplied offline_access explicitly and was rejected; the CLI adds that scope automatically, and the corrected login succeeded. No credential/token value was printed or stored in repository files.
+
+Wrangler 4.156.1 published streamsense, registered the workers.dev subdomain for the new account and returned **https://streamsense.streamsense.workers.dev**, version `907a31d7-dc54-4d16-b16a-e0be6c352ac3`. Initial requests failed while DNS propagated. A later DNS lookup resolved and the proxied health endpoint returned 200/status ok; dashboard HTML/title/CSP and its JavaScript asset also returned 200. This verifies live HTTP delivery, not a new browser/Narrator/audio check. The web-search tool could not access the new Render service, so approved direct Node HTTPS requests were used instead; TLS checks were not bypassed.
+
+A private hosted OAuth probe found configured true with no missing settings, returned 302 without following the redirect to Twitch, and still selected `https://streamsense-bgqp.onrender.com/auth/twitch/callback`. Its own temporary session was removed successfully. The owner has been asked to set Render FRONTEND_URL to the Cloudflare origin, TWITCH_REDIRECT_URI to the exact Cloudflare callback and Save and deploy, then add that callback to the existing Twitch app. These confirmations and a public-origin demo check remain pending. This does not imply that the user's existing local Twitch verification has been repeated on the hosted site.
+
+The actual public FRONTEND_URL and TWITCH_REDIRECT_URI are now declared in render.yaml so the owner's GitHub-linked Blueprint can sync them without a separate Render API credential. Public settings only were added; existing private Twitch values remain sync:false. Automatic Blueprint sync/deployment and the final public callback are checked separately after pushing; publishing source alone does not prove the live configuration changed.
+
+No paid Containers or paid-plan change was made. Source credential scans still pass, including ignored Wrangler/secret-file paths. No live Twitch credentials or browser session were used by the hosted HTTP checks.
+
 ## Further work
 
 - No new feature milestone has been started.

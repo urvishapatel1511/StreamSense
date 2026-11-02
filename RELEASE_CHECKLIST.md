@@ -1,6 +1,6 @@
 # StreamSense release checklist
 
-Reviewed 2 November 2026 (Asia/Calcutta). Status words mean **Verified**, **Not verified**, or **Not applicable**. Automated evidence, user-reported evidence and agent observation are distinguished below. “Verified” applies to the stated check only, not the whole product. Source is committed and pushed to main for the authorized hosting work; no live cloud deployment or Devpost submission has been completed.
+Reviewed 2 November 2026 (Asia/Calcutta). Status words mean **Verified**, **Not verified**, or **Not applicable**. Automated evidence, user-reported evidence and agent observation are distinguished below. “Verified” applies to the stated check only, not the whole product. Source is pushed to main; Render and Cloudflare are published. Full hosted Twitch/audio acceptance remains pending, and no Devpost submission has been completed.
 
 Release decision: **hold final release/submission approval** until the remaining manual acceptance checks and judging repository/video materials are ready. No known build/type-check/test failure remains. This is a local MVP; it is not production-hosted or certified accessible.
 
@@ -74,7 +74,9 @@ Record browser/version, local voice and output device with each new result. User
 | Judge repository access and clean-checkout installation | Not verified | Confirm the required reviewers can access the repository and follow setup from a clean checkout |
 | Local production service, HTTPS configuration and proxy tests | Verified | Compiled bundle/server smoke check plus production config/HTTP/proxy tests; no public URL implied |
 | Cloudflare Worker packaging | Verified | Wrangler 4.156.1 dry-run bundled the proxy; no account login, resources or deployment |
-| Free Cloudflare + free Render accounts and actual deployments | Not verified | Owner selected this route and must create/authorize accounts; real upstream/Worker URLs not yet assigned |
+| Render and Cloudflare deployments | Verified | Owner deployed https://streamsense-bgqp.onrender.com; authorized CLI published https://streamsense.streamsense.workers.dev. Dashboard/JS/health returned 200 through Cloudflare |
+| Hosted Render demo/scheduler | Verified | Separate anonymous session passed 28-message analysis/clearing and real five-second scheduling; session removed |
+| Final public frontend/callback settings | Not verified | Latest OAuth probe still used the Render callback. Owner has been asked to set Cloudflare FRONTEND_URL/TWITCH_REDIRECT_URI and save/deploy |
 | Public HTTPS/Twitch login, cookie flow, chat and speech | Not verified | Must test on the actual deployed Worker URL after configuring Render and Twitch |
 | Durable session store / production hardening | Not verified | Preview still uses one in-memory backend instance; restarts log out users |
 

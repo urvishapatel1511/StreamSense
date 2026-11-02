@@ -14,9 +14,13 @@ services:
         value: production
       - key: NODE_VERSION
         value: 26.13.0
+      - key: FRONTEND_URL
+        value: https://streamsense.streamsense.workers.dev
+      - key: TWITCH_REDIRECT_URI
+        value: https://streamsense.streamsense.workers.dev/auth/twitch/callback
       - key: TWITCH_CLIENT_ID
         sync: false
       - key: TWITCH_CLIENT_SECRET
         sync: false
-# Render supplies PORT and RENDER_EXTERNAL_URL. The app derives its HTTPS
-# frontend and callback URLs from that origin. Add the exact callback to Twitch.
+# Render supplies PORT and RENDER_EXTERNAL_URL. The browser-facing origin and
+# callback use the deployed Cloudflare address. Register that callback in Twitch.

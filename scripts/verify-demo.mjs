@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 
-const base = 'http://localhost:5173';
+const target = new URL(process.env.STREAMSENSE_VERIFY_URL || 'http://localhost:5173');
+assert.ok(target.protocol === 'https:' || target.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(target.hostname), 'Use HTTPS for a hosted verification target.');
+assert.ok(!target.username && !target.password && !target.search && !target.hash && target.pathname === '/', 'Use an origin URL without credentials, query or extra path.');
+const base = target.origin;
 let cookie = '';
 async function request(path, action) {
   const response = await fetch(`${base}${path}`, {

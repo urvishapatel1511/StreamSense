@@ -2,6 +2,14 @@
 
 Selected target: a **free Cloudflare Worker public address + one free Render Node service**. The Worker forwards requests; Render runs the existing Express, Twitch EventSub and summary code. The browser uses one Cloudflare HTTPS origin for the dashboard, API and Twitch callback. `render.yaml` and `wrangler.jsonc` contain configuration, not credentials. No paid Containers, paid Workers plan or purchased domain is required. Free-plan quotas and sleep limits apply. This is a hackathon preview; sessions/tokens/history remain in memory and are cleared on backend restarts. It is not a production-hardened or highly available service.
 
+## Assigned service addresses
+
+- Public dashboard: **https://streamsense.streamsense.workers.dev**
+- Render backend: **https://streamsense-bgqp.onrender.com**
+- Twitch callback: **https://streamsense.streamsense.workers.dev/auth/twitch/callback**
+
+Cloudflare deployment succeeded and its proxied health endpoint returned HTTP 200. Render's dashboard/health and an isolated 28-message demo/scheduler check passed. Render's final frontend/callback settings and Twitch's registered callback must be confirmed before the full public login/control flow is accepted. Browser rendering, native audio and real Twitch delivery on this hosted origin remain separate manual checks.
+
 ## What is prepared
 
 - Root `npm start` starts the compiled Express backend.
@@ -58,7 +66,7 @@ Do **not** copy the local `PORT=3001`, `FRONTEND_URL=http://localhost:5173`, or 
 Set-Location 'C:\Users\Urvi Shah\Documents\Hackathon'
 $env:CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV = 'false'
 $env:WRANGLER_SEND_METRICS = 'false'
-npm.cmd exec --yes --package=wrangler@4.156.1 -- wrangler login --browser=false
+npm.cmd exec --yes --package=wrangler@4.156.1 -- wrangler login --browser=false --scopes account:read user:read workers:write workers_scripts:write
 npm.cmd exec --yes --package=wrangler@4.156.1 -- wrangler deploy
 ```
 
@@ -89,6 +97,16 @@ npm.cmd test
 npm.cmd run verify:deployment
 npm.cmd run verify:security
 ```
+
+To exercise the live public demo pipeline using an isolated session after Render's public-origin settings are active:
+
+```powershell
+$env:STREAMSENSE_VERIFY_URL = 'https://streamsense.streamsense.workers.dev'
+npm.cmd run verify:demo
+Remove-Item Env:\STREAMSENSE_VERIFY_URL
+```
+
+Without STREAMSENSE_VERIFY_URL, verify:demo continues to target the local frontend. The hosted target must use HTTPS. The verifier does not log into Twitch or use your browser's session; it removes its own temporary session afterwards.
 
 `verify:deployment` starts and stops its own temporary compiled production server with **no credentials**. It verifies the actual built HTML/JavaScript, API, 28-message demo analysis, Secure cookie flags, public Origin checks and private/missing-file errors. Local HTTP simulates a TLS reverse proxy; this is not evidence of a public HTTPS deployment, live Twitch delivery, browser rendering or audible speech.
 
