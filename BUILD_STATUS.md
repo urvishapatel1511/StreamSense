@@ -505,6 +505,10 @@ Create/authorize free Cloudflare and Render accounts. Render needs GitHub reposi
 
 Free Render can sleep and lose in-memory sessions on restarts; Workers Free has shared daily request limits, including dashboard polling. Keep one backend instance and avoid unnecessary duplicate tabs. These services are not an always-on/production guarantee. No passwords, Twitch secrets or Cloudflare API tokens were requested in chat, and no cloud resource has been created yet.
 
+## Hosting source uploaded to GitHub
+
+After the user authorized the required deployment work, the 20-file hosting change was committed on main as `76e73c8` (Prepare free Cloudflare and Render deployment). The complete 59-file Git index passed credential-value and excluded-path checks before committing. `git push -u origin main` succeeded, created remote main and set local main to track origin/main; the earlier initial app commit was included. No force push, paid resource, cloud deployment or Devpost submission was performed. Source upload is complete; owner account setup, real service URLs and hosted acceptance remain pending. Deployment/connection instructions are in DEPLOYMENT.md, and private credentials should be entered only at their intended providers.
+
 ## Further work
 
 - No new feature milestone has been started.

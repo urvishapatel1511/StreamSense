@@ -1,6 +1,6 @@
 # StreamSense release checklist
 
-Reviewed 2 November 2026 (Asia/Calcutta). Status words mean **Verified**, **Not verified**, or **Not applicable**. Automated evidence, user-reported evidence and agent observation are distinguished below. “Verified” applies to the stated check only, not the whole product. Nothing has been committed, published or submitted.
+Reviewed 2 November 2026 (Asia/Calcutta). Status words mean **Verified**, **Not verified**, or **Not applicable**. Automated evidence, user-reported evidence and agent observation are distinguished below. “Verified” applies to the stated check only, not the whole product. Source is committed and pushed to main for the authorized hosting work; no live cloud deployment or Devpost submission has been completed.
 
 Release decision: **hold final release/submission approval** until the remaining manual acceptance checks and judging repository/video materials are ready. No known build/type-check/test failure remains. This is a local MVP; it is not production-hosted or certified accessible.
 
@@ -67,10 +67,11 @@ Record browser/version, local voice and output device with each new result. User
 | Application logs do not intentionally log secrets/chat | Verified | Logging sites reviewed; startup/service errors only; not an audit of all external Windows/npm logs |
 | Production dependency advisory check | Verified | `npm.cmd audit --omit=dev --audit-level=high`: zero vulnerabilities reported; rerun before release |
 | Unknown-secret/exhaustive security audit | Not verified | Local-value scan cannot detect every unknown credential or vulnerability |
-| Local Git repository and origin connection | Verified | Project root resolves; origin is `https://github.com/urvishapatel1511/StreamSense.git`; successful remote check returned no branches/tags |
+| Local Git repository and origin connection | Verified | Origin is `https://github.com/urvishapatel1511/StreamSense.git`; main was successfully pushed and tracks origin/main |
 | Initial local commit approval and main branch | Verified | User explicitly authorized a commit on `main`; local branch renamed from the unborn `master` |
 | Credential/generated-file exclusion by Git | Verified | `git check-ignore` confirms `.env`, node_modules and frontend/backend dist directories are ignored; verify staged/tracked content before committing |
-| Published judging code and reviewer access | Not verified | Origin is connected; the initial local commit is authorized, but GitHub upload still requires separate approval and reviewer-access verification |
+| Committed and uploaded source | Verified | Initial app and tested hosting preparation pushed to main; all 59 indexed files passed credential/generated-path checks |
+| Judge repository access and clean-checkout installation | Not verified | Confirm the required reviewers can access the repository and follow setup from a clean checkout |
 | Local production service, HTTPS configuration and proxy tests | Verified | Compiled bundle/server smoke check plus production config/HTTP/proxy tests; no public URL implied |
 | Cloudflare Worker packaging | Verified | Wrangler 4.156.1 dry-run bundled the proxy; no account login, resources or deployment |
 | Free Cloudflare + free Render accounts and actual deployments | Not verified | Owner selected this route and must create/authorize accounts; real upstream/Worker URLs not yet assigned |
@@ -86,7 +87,7 @@ Official sources checked: [overview](https://twitchcon-codex.devpost.com/) and [
 | Submission requirements reviewed | Verified | Twitch-connected project built with Codex; accessible code repository; description of features and Codex use; main Codex session ID; public YouTube demo shorter than three minutes showing Twitch functionality and Codex development |
 | Deadline checked | Verified | Official rules state 2 November 2026, 2:00 pm Pacific Time (3 November, 3:30 am IST); confirm the live deadline before submitting |
 | Participant eligibility, rights and build-period compliance | Not verified | User must review official rules and confirm personal/team eligibility, ownership, permissions and build dates |
-| Code repository with source/assets/setup and reviewer access | Not verified | GitHub repository URL supplied and connected; remote currently advertises no refs. Source has not been uploaded. Confirm reviewer access under the official form/rules after approval |
+| Code repository with source/assets/setup and reviewer access | Not verified | Code and instructions are uploaded to main; required judge access and clean-checkout installation still need verification |
 | Main Codex session ID recorded for the form | Not verified | Obtain the actual ID for the thread containing most work; do not invent it |
 | Accurate project description explaining Codex use | Not verified | Describe rule-based summaries honestly; do not claim semantic AI or certified accessibility |
 | Demo recording prepared and reviewed for private data | Not verified | Show real Twitch arrival → summary → speech/stop, labelled demo fallback and Codex contribution; hide credentials/private chat and avoid unlicensed music |
