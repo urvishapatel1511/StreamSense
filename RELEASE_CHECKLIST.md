@@ -97,8 +97,9 @@ Official sources checked: [overview](https://twitchcon-codex.devpost.com/) and [
 | Main Codex session ID recorded for the form | Not verified | Obtain the actual ID for the thread containing most work; do not invent it |
 | Accurate project description explaining Codex use | Not verified | Describe rule-based summaries honestly; do not claim semantic AI or certified accessibility |
 | Demo recording prepared and reviewed for private data | Not verified | Show real Twitch arrival → summary → speech/stop, labelled demo fallback and Codex contribution; hide credentials/private chat and avoid unlicensed music |
+| Illustrated narration draft and final-footage script | Verified | Local 153-second illustrated MP4 and SRT generated; clearly marked DRAFT, with no live browser/Codex footage. See SUBMISSION_VIDEO_SCRIPT.md; final recording still required |
 | Public YouTube demo shorter than three minutes | Not verified | Record/review first; upload only after explicit user approval |
 | Judging access remains available through judging period | Not verified | Test installation from a clean checkout and follow repository/access requirements |
 | Final submission approval and completed Devpost entry | Not verified | User approval required; nothing submitted or published by the agent |
 
-The README contains exact Windows setup/run commands and the detailed manual checklist. BUILD_STATUS.md records executed commands, initial failures, fixes and evidence limits.
+The README contains exact Windows setup/run commands. MANUAL_TESTS_AND_RECORDING.md provides the remaining manual checks and Windows recording instructions. The current Firefox automation attempt was stopped by unsupported URL-policy enforcement; native control, Narrator and zoom checks remain open. BUILD_STATUS.md records executed commands, initial failures, fixes and evidence limits.

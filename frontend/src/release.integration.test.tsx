@@ -92,11 +92,11 @@ describe('release integration through actual local HTTP (mock Twitch and audio)'
     await waitFor(() => expect(screen.getByText(/28 real messages received/)).toBeTruthy(), { timeout: 5000 });
     expect(spoken).toHaveLength(1); expect(session.realSummary!.snapshot().pendingMessages).toBe(28);
     const twitchCalls = twitchHttp.mock.calls.length;
-    action('Load Demo Batch'); await screen.findByText('Demo mode'); expect(screen.getByText('Speech disabled')).toBeTruthy();
+    action('Load Demo Batch'); await screen.findByText('Demo mode'); await screen.findByText('Speech disabled');
     expect(session.account).toBe(account); expect(session.chat).toBe(chat); expect(sockets[0]!.closed).toBe(false); expect(twitchHttp).toHaveBeenCalledTimes(twitchCalls);
     action('Generate summary now'); await waitFor(() => expect(screen.getAllByText(/which game is being played/).length).toBeGreaterThan(0));
     expect(session.realSummary!.snapshot().pendingMessages).toBe(28); expect(spoken).toHaveLength(1);
-    action('Return to Twitch chat'); await screen.findByText('Twitch chat mode'); action('Enable Speech'); finishAudio(); action('Generate summary now');
+    action('Return to Twitch chat'); await screen.findByText('Twitch chat mode'); await screen.findByText('Speech disabled'); action('Enable Speech'); finishAudio(); action('Generate summary now');
     await waitFor(() => expect(spoken).toHaveLength(3));
     expect(spoken.at(-1)!.text).toBe(session.realSummary!.snapshot().latest!.text); expect(session.realSummary!.snapshot().latest!.source).toBe('twitch');
     expect(session.demoSummary!.snapshot().latest!.source).toBe('demo');

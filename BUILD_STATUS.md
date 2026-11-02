@@ -531,6 +531,28 @@ The owner opened `https://streamsense.streamsense.workers.dev` in the requested 
 
 In separate follow-up checks on the public site, the owner manually sent “What game is this?” in their own channel and answered **Yes, message and counter verified** for exact appearance/TWITCH label/increased real count. After Enable Speech and Generate summary now (or Repeat if already generated), the owner answered **Yes, announcement and summary are audible**. Record the basic hosted OAuth → real chat → generated spoken summary flow as human-verified, separate from mocks and isolated HTTP demo checks. Native Pause/Resume/Stop, broader live grouping accuracy, Narrator/keyboard/zoom and full accessibility compliance are not established by these results.
 
+## Remaining-feature recheck and video preparation — 2 November 2026
+
+No application feature or runtime dependency was added. One integration test checked speech state before React completed its mode-change effect. It now waits for the disabled state both when entering Demo Mode and returning to Twitch. Production behaviour was not changed.
+
+| Command/check | Actual result |
+| --- | --- |
+| Initial `npm.cmd test` | 227 passed, 1 failed on the asynchronous speech-state assertion; failure retained here |
+| `npm.cmd test -- frontend/src/release.integration.test.tsx` after fixing waits | 3 passed |
+| Final `npm.cmd test` | 228 passed across 15 files |
+| `npm.cmd run typecheck` | Frontend and backend passed; rerun after the test change also passed |
+| `npm.cmd run build` | Frontend bundle and backend compilation passed |
+| `npm.cmd run verify:deployment` | Passed against the actual compiled server/bundle with an isolated session |
+| `npm.cmd run verify:security` | Passed before documentation additions; final scan recorded below |
+| `$env:STREAMSENSE_VERIFY_URL='https://streamsense.streamsense.workers.dev'; npm.cmd run verify:demo` | Passed: isolated 28-message demo, questions/repeats, Busy activity, manual generation/clearing, actual five-second scheduler and cleanup |
+| Native Firefox/control/accessibility check | Not completed: screenshot timed out, then computer-use policy stopped because URL enforcement is unsupported for this Windows browser. No alternate automation bypass used |
+
+MANUAL_TESTS_AND_RECORDING.md now gives repeatable speech, settings, keyboard, zoom, Narrator and real-chat acceptance checks, with expected demo metrics and recording-tool instructions. These manual checks remain Not tested until a person records results. The earlier owner-confirmed hosted Twitch/chat/audio results remain valid human evidence, separate from this automated recheck.
+
+SUBMISSION_VIDEO_SCRIPT.md contains a 2:40 final-footage plan and narration. An external illustrated draft MP4 was generated locally at `C:\Users\Urvi Shah\.codex\visualizations\2026\11\01\01a19865-39e3-7d83-a06d-766433174cac\streamsense-submission-draft-v1\StreamSense_Product_Explainer_DRAFT.mp4`. It is 153.01 seconds, with H.264 video, offline Windows narration, readable on-frame text and a companion SRT. Every scene labels it as an illustrated draft; it contains no live browser or Codex recording. The first restricted voice export produced empty WAV files; the approved offline export succeeded. Media checks and remaining limitations are recorded separately below. This is not a submission-ready demo: genuine Twitch and Codex footage, human audio review, privacy review and final approval remain required. No video was uploaded or submitted.
+
+Final media verification: FFprobe confirmed 1920×1080 H.264 video and AAC audio, duration 153.011 seconds. FFmpeg decoded the complete MP4 successfully; narration measured mean -20.7 dB and peak -2.6 dB (not silent, no sample peak clipping reported). One generated demo-scene card was visually inspected; no live screen was captured. Captions are proportional timing estimates and require human review along with pronunciation, pacing and all scenes. Final `npm.cmd run verify:security` passed on 75 source/build/document files with no configured credential material found; this remains a limited exact-value scan, not an exhaustive audit.
+
 ## Further work
 
 - No new feature milestone has been started.
