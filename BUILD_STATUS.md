@@ -465,6 +465,46 @@ The user supplied `https://github.com/urvishapatel1511/StreamSense.git` and auth
 
 The user explicitly authorized committing on `main`. The unborn local branch was renamed from `master` to `main`; the source and release documentation are being included in the authorized initial commit. The credential scan passed before staging, and Git confirms that `.env`, dependencies and build output directories are ignored. The commit result and clean-worktree check are reported in the chat after execution. GitHub push/publication is not part of this authorization and has not been performed.
 
+## Public hosting preparation — free Cloudflare + Render
+
+The user authorized the work needed for an online URL, then specifically requested Cloudflare, required free hosting and reported no Cloudflare account yet. After checking official platform capabilities/pricing, the user selected **Cloudflare public address + free Render backend**. Paid Cloudflare Containers were not provisioned; no paid plan or purchased domain is authorized. The Render account connection was offered but is not confirmed. No Cloudflare account, actual backend URL or actual Worker URL is available yet, so no live deployment is claimed.
+
+### Prepared implementation
+
+- Production configuration validates a public HTTPS frontend/callback with one origin, independent of the host's internal port. Render's platform URL can provide the initial origin; the final setup sets FRONTEND_URL to the actual Cloudflare origin. Unsafe/inconsistent production settings fail closed. Local development settings remain supported.
+- Express serves the built frontend together with the API only in production, refuses startup without the build, and keeps private/missing assets/API routes as errors. Production uses Secure/HttpOnly/SameSite cookies, including anonymous Demo Mode, and CSP/HSTS/frame headers. Local dev retains its Vite proxy.
+- Production binds to `0.0.0.0` and platform PORT, reads platform environment settings and does not load the private root .env file. Root `npm start` starts the compiled service.
+- The tiny free Cloudflare Worker forwards requests to the configured Render HTTPS origin, preserving cookies, path/query, method/body and Origin. It returns OAuth redirects to the browser without following them with the cookie, preserves errors and disables response caching. Invalid/placeholder upstream configuration returns a clear 503. No Twitch credentials belong in the Worker.
+- Production can recognize Render's actual platform Host behind the Worker while keeping OAuth URLs tied to the configured public origin; it does not trust arbitrary forwarded-host headers. Tests cover the Cloudflare frontend/Render backend OAuth path with synthetic Twitch responses.
+- `render.yaml`, `wrangler.jsonc` and DEPLOYMENT.md prepare the free hosting route. Wrangler is invoked at pinned version 4.156.1 via npm exec; no application runtime dependency was added. Wrangler output/local secret files are ignored, local .env loading is disabled for the CLI, and the credential scanner covers YAML/JSONC too.
+- Frontend configuration/error help now works for the current public origin instead of instructing hosted users to return to localhost.
+
+### Actual checks and corrections
+
+| Command/check | Actual result |
+| --- | --- |
+| Initial production config/HTTP tests | Exit 0: 32 targeted tests passed |
+| Initial expanded type-check | Failed on Express listen callback types in new tests; callbacks now handle optional startup errors explicitly |
+| Initial 216-test full suite | 213 passed, 3 existing frontend/local-HTTP tests failed because production file-path resolution was being evaluated in the jsdom test environment even when not in production |
+| Fix and `npm.cmd run test:integration` | Frontend directory resolution is now lazy/production-only; all 3 local HTTP/React integrations passed |
+| Full suite before Cloudflare proxy additions | Exit 0: 216 passed across 14 files |
+| `npm.cmd test -- backend/src/cloudflare.test.ts backend/src/config.test.ts backend/src/deployment.test.ts` | Exit 0: 45 passed, including public HTTPS validation, safe static routes, cookie/origin protection, proxy forwarding/errors, and mocked public OAuth |
+| Final `npm.cmd test` after proxy additions | Exit 0: **228 tests across 15 files passed**, 148 backend and 80 frontend |
+| `npm.cmd run typecheck` | Exit 0 for frontend and backend, including deployment/proxy test sources |
+| `npm.cmd run build` | Exit 0 for frontend bundle and backend compilation |
+| `npm.cmd run verify:deployment` | Exit 0 against an actual temporary compiled production process with no credentials: built HTML/JS, API, accurate 28-message summaries, cookie flags, security headers and missing/private-file errors; private process stopped |
+| `npm.cmd run verify:security` | Exit 0: no configured credential values in scanned source/build/docs; ignored CLI output/secret files remain excluded |
+| Pinned Wrangler `deploy --dry-run --outdir .wrangler/dry-run` | Exit 0; proxy bundled (1.62 KiB, gzip 0.71 KiB) with only public BACKEND_ORIGIN binding. No login or deployment occurred |
+| Wrangler `login --help` | Verified `--browser=false` support, so owner can open the authorization link in Firefox and complete login privately |
+
+The initial npm registry lookup did not respond in the restricted runner; it was stopped and an approved bounded retry returned Wrangler 4.156.1. Approved npm exec downloaded/ran only the pinned CLI for packaging validation/help. No Docker, paid Containers or backend rewrite was used. Tests use mocked Twitch/audio or loopback HTTP, not a hosted live Twitch exchange.
+
+### Remaining owner actions and free-tier limits
+
+Create/authorize free Cloudflare and Render accounts. Render needs GitHub repository access and the existing Twitch app settings entered privately; Cloudflare needs owner login, not a token pasted in chat. After the actual Render URL is known, set the Worker's BACKEND_ORIGIN and deploy it on Workers Free. Set Render FRONTEND_URL to the assigned Worker origin, restart/redeploy the backend, and add the exact Worker callback in the Twitch Developer Console. The owner must complete real authorization and test the actual hosted message/summary/audio flow.
+
+Free Render can sleep and lose in-memory sessions on restarts; Workers Free has shared daily request limits, including dashboard polling. Keep one backend instance and avoid unnecessary duplicate tabs. These services are not an always-on/production guarantee. No passwords, Twitch secrets or Cloudflare API tokens were requested in chat, and no cloud resource has been created yet.
+
 ## Further work
 
 - No new feature milestone has been started.

@@ -11,7 +11,7 @@ Release decision: **hold final release/submission approval** until the remaining
 | Installed direct dependencies | Verified | `npm.cmd ls --depth=0` exit 0; no new dependency added |
 | Frontend and backend type-check | Verified | `npm.cmd run typecheck` exit 0 for both workspaces, including tests |
 | Frontend and backend production builds | Verified | `npm.cmd run build` exit 0; frontend bundle generated and backend compiled |
-| All unit and integration tests | Verified | `npm.cmd test`: 190 tests in 13 files; 110 backend and 80 frontend |
+| All unit and integration tests | Verified | Final hosting-preparation run: `npm.cmd test`, 228 tests in 15 files; 148 backend and 80 frontend |
 | Credential-free demo → questions/repeats/activity → speech controls | Verified | Real local HTTP + actual React/Express/processor; Twitch/audio mocked in `release.integration.test.tsx` |
 | Mocked OAuth/EventSub → real processing/UI → speech and disconnect | Verified | Same integration suite, including duplicate events and preserved demo/live sessions; not a live Twitch test |
 | Disconnect during an active batch | Verified | Integration test cancels client request, disposes server processor and rejects late history/UI/audio |
@@ -71,7 +71,11 @@ Record browser/version, local voice and output device with each new result. User
 | Initial local commit approval and main branch | Verified | User explicitly authorized a commit on `main`; local branch renamed from the unborn `master` |
 | Credential/generated-file exclusion by Git | Verified | `git check-ignore` confirms `.env`, node_modules and frontend/backend dist directories are ignored; verify staged/tracked content before committing |
 | Published judging code and reviewer access | Not verified | Origin is connected; the initial local commit is authorized, but GitHub upload still requires separate approval and reviewer-access verification |
-| Public deployment / production HTTPS/session-store hardening | Not applicable | This release targets local loopback execution; do not expose development servers publicly |
+| Local production service, HTTPS configuration and proxy tests | Verified | Compiled bundle/server smoke check plus production config/HTTP/proxy tests; no public URL implied |
+| Cloudflare Worker packaging | Verified | Wrangler 4.156.1 dry-run bundled the proxy; no account login, resources or deployment |
+| Free Cloudflare + free Render accounts and actual deployments | Not verified | Owner selected this route and must create/authorize accounts; real upstream/Worker URLs not yet assigned |
+| Public HTTPS/Twitch login, cookie flow, chat and speech | Not verified | Must test on the actual deployed Worker URL after configuring Render and Twitch |
+| Durable session store / production hardening | Not verified | Preview still uses one in-memory backend instance; restarts log out users |
 
 ## Demo video and Devpost preparation
 

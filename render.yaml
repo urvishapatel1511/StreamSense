@@ -1,0 +1,22 @@
+# One instance is required while sessions/tokens are held in process memory.
+services:
+  - type: web
+    name: streamsense
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: 'off'
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 26.13.0
+      - key: TWITCH_CLIENT_ID
+        sync: false
+      - key: TWITCH_CLIENT_SECRET
+        sync: false
+# Render supplies PORT and RENDER_EXTERNAL_URL. The app derives its HTTPS
+# frontend and callback URLs from that origin. Add the exact callback to Twitch.

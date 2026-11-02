@@ -79,7 +79,7 @@ export function useTwitch() {
       const data: unknown = await response.json();
       if (!validStatus(data)) throw new Error();
       if (!controller.signal.aborted) { applyStatus(data); setAvailable(true); }
-    } catch { if (!controller.signal.aborted) setSummaryNotice('The summary action failed. Check the backend and use http://localhost:5173, then try again.'); }
+    } catch { if (!controller.signal.aborted) setSummaryNotice(`The summary action failed. Check the backend and open ${window.location.origin}, then try again.`); }
     finally {
       if (control.current === controller) { version.current++; control.current = null; if (!controller.signal.aborted) setSummaryBusy(false); }
     }

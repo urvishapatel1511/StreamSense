@@ -7,18 +7,28 @@ import type { Session } from './sessions.js';
 import { loadProcessingSettings, type ProcessingSettings } from './processing.js';
 import { SummaryBatcher } from './batcher.js';
 import { demoBatch } from './demo.js';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export function createApp(options: { configuration?: Configuration; http?: Fetcher; sockets?: SocketFactory; processing?: ProcessingSettings } = {}) {
+export function createApp(options: { configuration?: Configuration; http?: Fetcher; sockets?: SocketFactory; processing?: ProcessingSettings; frontendDirectory?: string } = {}) {
   const configuration = options.configuration ?? loadConfiguration();
   const config = configuration.twitch;
   const processingSettings = options.processing ?? loadProcessingSettings();
-  const store = new SessionStore(config ? new URL(config.redirectUri).protocol === 'https:' : false);
+  const frontendDirectory = configuration.production ? options.frontendDirectory ?? fileURLToPath(new URL('../../frontend/dist/', import.meta.url)) : undefined;
+  if (frontendDirectory !== undefined && !existsSync(join(frontendDirectory, 'index.html'))) throw new Error('Frontend production files are missing. Run npm run build before starting the service.');
+  const store = new SessionStore(new URL(configuration.frontendUrl).protocol === 'https:');
   const app = express();
   app.disable('x-powered-by');
   app.use((_request, response, next) => {
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('Referrer-Policy', 'no-referrer');
     response.setHeader('X-Content-Type-Options', 'nosniff');
+    if (configuration.production) {
+      response.setHeader('Strict-Transport-Security', 'max-age=15552000');
+      response.setHeader('X-Frame-Options', 'DENY');
+      response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+    }
     next();
   });
   app.use(express.json({ limit: '2kb' }));
@@ -91,7 +101,7 @@ export function createApp(options: { configuration?: Configuration; http?: Fetch
 
   app.get('/auth/twitch', (request, response) => {
     if (!config) { response.status(503).json({ error: 'Twitch configuration is missing or invalid. Add the required values to the root .env and restart the backend.', missingConfiguration: configuration.missing }); return; }
-    if (request.hostname !== new URL(config.redirectUri).hostname) {
+    if (request.hostname !== new URL(config.redirectUri).hostname && !(configuration.production && request.hostname === configuration.proxyHostname)) {
       response.redirect(new URL('/auth/twitch', config.redirectUri).href); return;
     }
     const old = store.read(request);
@@ -144,6 +154,13 @@ export function createApp(options: { configuration?: Configuration; http?: Fetch
     response.json({ disconnected: true });
   });
 
+  if (frontendDirectory !== undefined) {
+    const serveFrontend = express.static(frontendDirectory, { dotfiles: 'ignore', cacheControl: false });
+    app.use((request, response, next) => {
+      if (/^\/(api|auth)(\/|$)/.test(request.path)) { next(); return; }
+      serveFrontend(request, response, next);
+    });
+  }
   app.use((_request, response) => { response.status(404).json({ error: 'Not found' }); });
   app.use((error: unknown, _request: express.Request, response: express.Response, _next: express.NextFunction) => {
     const status = typeof error === 'object' && error !== null && 'status' in error && (error.status === 400 || error.status === 413) ? error.status : 500;

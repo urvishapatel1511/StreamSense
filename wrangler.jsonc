@@ -1,0 +1,12 @@
+{
+  "name": "streamsense",
+  "main": "backend/src/cloudflare.ts",
+  "compatibility_date": "2026-11-02",
+  "workers_dev": true,
+  "send_metrics": false,
+  "observability": { "enabled": false },
+  "vars": {
+    // Replace with the actual free Render URL before deploying. No secrets here.
+    "BACKEND_ORIGIN": "https://replace-with-your-service.onrender.com"
+  }
+}

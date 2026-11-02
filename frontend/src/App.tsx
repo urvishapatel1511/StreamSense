@@ -11,7 +11,7 @@ export default function App() {
   const speech = useSpeech(status.summary.latest, `${demo ? 'demo' : 'twitch'}:${status.user?.id ?? 'anonymous'}`);
   const messages = demo && status.messages.length === 0 ? sampleMessages.map(message => ({ ...message, id: message.user, source: 'demo' as const })) : status.messages.map(message => ({ ...message, color: 'purple', time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }));
   const connecting = ['connecting', 'authenticated', 'eventsub_connecting', 'reconnecting'].includes(status.state);
-  const connectionHelp = !status.configured ? `Add your Twitch app settings to the root .env and restart the backend. ${status.missingConfiguration.join(', ')}` : status.user ? `Twitch account authenticated: ${status.user.login}. ${status.subscriptionConfirmed ? 'Chat subscription confirmed. Waiting for or receiving real messages.' : 'The account is authenticated; chat is not currently listening.'}` : 'Connect your own broadcaster account to receive real Twitch chat. You will be redirected to Twitch.';
+  const connectionHelp = !status.configured ? `The server's Twitch connection is not configured. Set its Twitch application settings and restart the service. ${status.missingConfiguration.join(', ')}` : status.user ? `Twitch account authenticated: ${status.user.login}. ${status.subscriptionConfirmed ? 'Chat subscription confirmed. Waiting for or receiving real messages.' : 'The account is authenticated; chat is not currently listening.'}` : 'Connect your own broadcaster account to receive real Twitch chat. You will be redirected to Twitch.';
 
   return (
     <>

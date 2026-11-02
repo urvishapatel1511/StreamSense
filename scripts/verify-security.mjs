@@ -14,10 +14,10 @@ const secretValues = Object.entries(privateEnv)
 const paths = [];
 function collect(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    if (entry.name === 'node_modules' || entry.name === '.git' || entry.name.startsWith('.env') && entry.name !== '.env.example') continue;
+    if (['node_modules', '.git', '.wrangler'].includes(entry.name) || entry.name.startsWith('.dev.vars') || entry.name.startsWith('.env') && entry.name !== '.env.example') continue;
     const path = join(directory, entry.name);
     if (entry.isDirectory()) collect(path);
-    else if (entry.isFile() && (/\.(?:[cm]?js|jsx|tsx?|json|html|css|md)$/.test(entry.name) || ['.env.example', '.gitignore'].includes(entry.name))) paths.push(path);
+    else if (entry.isFile() && (/\.(?:[cm]?js|jsx|tsx?|jsonc?|html|css|md|ya?ml)$/.test(entry.name) || ['.env.example', '.gitignore'].includes(entry.name))) paths.push(path);
   }
 }
 collect(root);

@@ -4,7 +4,7 @@ An accessible chat companion for blind and low-vision Twitch streamers.
 
 StreamSense helps blind and low-vision Twitch streamers follow busy chat through short, spoken summaries of repeated messages and common questions. It connects to the streamer's own channel through Twitch OAuth and EventSub. Demo Mode provides 28 labelled fictional inputs through the same processing code, using a separate queue and history. Speech reads completed summaries only after explicit enabling. Voice settings, optional keyboard shortcuts, summary timing, transcript and metrics remain under the streamer's control. No external AI or paid speech service is used.
 
-The stack is React + TypeScript + Vite, Node.js + TypeScript + Express, Twitch OAuth/EventSub WebSocket, browser SpeechSynthesis, and Vitest/Testing Library. Milestone 5 adds integration checks and reliability fixes without adding dependencies or redesigning the app. This is a local hackathon build, not a production service or a claim of accessibility compliance. See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for remaining release gates.
+The stack is React + TypeScript + Vite, Node.js + TypeScript + Express, Twitch OAuth/EventSub WebSocket, browser SpeechSynthesis, and Vitest/Testing Library. Milestone 5 adds integration checks and reliability fixes without adding dependencies or redesigning the app. Hosting preparation now supports a free Cloudflare Worker public address with one free Render Node backend, as selected by the owner. It is not production-hardened or certified accessible. See [DEPLOYMENT.md](DEPLOYMENT.md) for hosting setup and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for remaining release gates. No public service is claimed until account setup, deployment and live checks finish.
 
 The user has confirmed actual Twitch message appearance and an increasing real-message count, plus a working Firefox dashboard with an audible enable announcement and generated demo summary. New automated integration tests use actual loopback HTTP and the real dashboard/processor but mock Twitch and audio. Those tests are separate evidence; actual spoken live summaries, native pause/resume, Narrator and the complete keyboard/zoom walkthrough remain manual checks.
 
@@ -67,7 +67,7 @@ FRONTEND_URL=http://localhost:5173
 
 Replace only the client ID and client secret placeholders. The local credentials previously entered into `.env.example` were preserved in an ignored `.env` during Milestone 2 setup; check that file rather than copying over it. `.env.example` contains safe placeholders again. Never share the contents of `.env`.
 
-The backend loads `.env` from the project root. Changing `.env` requires restarting the backend. A legacy `SESSION_SECRET` entry is unused: sessions use unguessable opaque IDs with all associated data stored on the server. Do not use `VITE_` for secrets; Vite exposes variables with that prefix to browsers.
+In local development, the backend loads `.env` from the project root. Changing `.env` requires restarting the backend. Production ignores this file and uses the hosting platform's environment settings. A legacy `SESSION_SECRET` entry is unused: sessions use unguessable opaque IDs with all associated data stored on the server. Do not use `VITE_` for secrets; Vite exposes variables with that prefix to browsers.
 
 ## Run the project
 
@@ -92,7 +92,7 @@ npm.cmd run dev:frontend
 npm.cmd run dev:backend
 ```
 
-Use **localhost consistently** for the browser, FRONTEND_URL, and registered callback. `localhost` and `127.0.0.1` use different cookie hosts. If Connect Twitch is clicked from 127.0.0.1, the backend first redirects to localhost to establish the correct cookie. Both servers bind to loopback, so they are accessible only on this computer.
+For local development, use **localhost consistently** for the browser, FRONTEND_URL, and registered callback. `localhost` and `127.0.0.1` use different cookie hosts. If Connect Twitch is clicked from 127.0.0.1, the backend first redirects to localhost to establish the correct cookie. Development servers bind to loopback. The production hosting configuration is described separately in DEPLOYMENT.md.
 
 Vite proxies `/api` and `/auth` to `http://127.0.0.1:3001`. The auth proxy preserves the original Host header. Keep the documented ports; if changing them, update `.env`, the Vite proxy/port configuration, and the registered Twitch redirect together.
 
@@ -225,13 +225,14 @@ npm.cmd run build
 npm.cmd test
 ```
 
-Run checks sequentially on a smaller laptop to avoid competing build/test workloads. The HTTP/UI integration scenarios allow 15 seconds each; individual API requests still have their normal application deadlines. Vitest runs at most two workers. All **190 tests across 13 files** passed in the release review. The suite includes a 10,000-input capacity test; this is not an eight-GB Windows performance certification.
+Run checks sequentially on a smaller laptop to avoid competing build/test workloads. The HTTP/UI integration scenarios allow 15 seconds each; individual API requests still have their normal application deadlines. Vitest runs at most two workers. All **228 tests across 15 files** passed after hosting preparation. The suite includes a 10,000-input capacity test; this is not an eight-GB Windows performance certification.
 
 Additional release checks:
 
 ```powershell
 npm.cmd run test:integration
 npm.cmd run verify:security
+npm.cmd run verify:deployment
 npm.cmd audit --omit=dev --audit-level=high
 ```
 
@@ -257,7 +258,7 @@ Build outputs are `frontend/dist` and `backend/dist`. To run the compiled backen
 npm.cmd run start:backend
 ```
 
-Production hosting and serving the frontend production bundle alongside the API remain outside this local MVP.
+For a public browser URL, follow [DEPLOYMENT.md](DEPLOYMENT.md). With `NODE_ENV=production`, `npm start` serves the built frontend and API together and requires a public HTTPS origin. `render.yaml` prepares the free single-instance backend; `wrangler.jsonc` and `backend/src/cloudflare.ts` prepare the free Cloudflare proxy. Set its actual backend URL and set Render's FRONTEND_URL to the actual Worker origin before public OAuth testing. The files contain no credentials and do not mean a public service has been created or verified.
 
 ## Architecture and development-session strategy
 
@@ -327,7 +328,7 @@ frontend/src/
 
 The Milestone 5 code and automated checks are complete; manual acceptance and submission preparation remain open. The user confirmed real Twitch message/counter delivery and basic Firefox demo audio. Verify an actual live-source summary and its audio, remaining Firefox speech controls, Windows Narrator, keyboard navigation and 200% zoom using the checklist above before marking those gates verified.
 
-Security review found server-side tokens, one-use session-bound OAuth state, HttpOnly SameSite cookies, protected mutations, text-only chat rendering and preference-only localStorage. Configured credential values were not found in scanned source/docs/build files; `.env.example` remains placeholders. Local HTTP intentionally lacks Secure cookies; servers bind to loopback. This is not an exhaustive security audit. A production deployment would need HTTPS, durable session/token storage and operational hardening. Do not expose these development servers publicly.
+Security review found server-side tokens, one-use session-bound OAuth state, HttpOnly SameSite cookies, protected mutations, text-only chat rendering and preference-only localStorage. Configured credential values were not found in scanned source/docs/build files; `.env.example` remains placeholders. Local HTTP intentionally lacks Secure cookies and development binds to loopback. Prepared production mode uses public HTTPS origins, Secure cookies and the host's public-facing bind/port. This is not an exhaustive security audit. Durable session/token storage and further operational hardening remain outside the preview scope. Do not expose the development servers publicly; use DEPLOYMENT.md's production configuration.
 
 The project has a local Git repository on `main`, connected through `origin` to [StreamSense on GitHub](https://github.com/urvishapatel1511/StreamSense). The user authorized the initial local commit on this branch. The last read-only remote check returned no branches or tags; GitHub upload remains a separate approval step. Git confirms that `.env`, node_modules and frontend/backend build outputs are ignored. Review staged/tracked files before each commit; never include credentials, logs, node_modules or generated output. Follow [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for repository access, the short demo video, project description, Codex session ID and current official Devpost requirements. Recheck the [official overview](https://twitchcon-codex.devpost.com/) and [rules](https://twitchcon-codex.devpost.com/rules) before submitting. Do not include credentials or private chat in recordings.
 
