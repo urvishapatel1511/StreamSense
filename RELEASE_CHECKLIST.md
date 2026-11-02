@@ -2,7 +2,7 @@
 
 Reviewed 2 November 2026 (Asia/Calcutta). Status words mean **Verified**, **Not verified**, or **Not applicable**. Automated evidence, user-reported evidence and agent observation are distinguished below. “Verified” applies to the stated check only, not the whole product. Source is pushed to main; Render and Cloudflare are published. Full hosted Twitch/audio acceptance remains pending, and no Devpost submission has been completed.
 
-Release decision: **hold final release/submission approval** until the remaining manual acceptance checks and judging repository/video materials are ready. No known build/type-check/test failure remains. This is a local MVP; it is not production-hosted or certified accessible.
+Release decision: **hold final release/submission approval** until the remaining manual acceptance checks and judging repository/video materials are ready. No known build/type-check/test failure remains. The basic public Twitch-to-spoken-summary flow is owner-verified. This is a hosted hackathon preview, not a production-hardened or certified accessible service.
 
 ## Automated checks and integration
 
@@ -27,10 +27,11 @@ Release decision: **hold final release/submission approval** until the remaining
 
 | Check | Status | Evidence / next action |
 | --- | --- | --- |
-| Real OAuth and enabled chat subscription | Verified | User previously authorized and reported Listening for chat |
-| Actual Twitch message and increasing real-message count | Verified | User explicitly confirmed both during Milestone 5 |
-| Live questions/repetitions → correct real-source summary/transcript | Not verified | Send distinctive repeated questions in own channel; compare actual received inputs and summary |
-| Actual live summary spoken | Not verified | Enable speech in Twitch mode and listen to a newly generated live summary |
+| Public OAuth and enabled chat subscription | Verified | After authorizing from the Cloudflare site in the requested Firefox flow, owner reported Listening for chat |
+| Local Twitch message and increasing real-message count | Verified | User explicitly confirmed both during Milestone 5; this predates public deployment |
+| Hosted Twitch message and increasing real-message count | Verified | Owner confirmed the exact test question appeared with a TWITCH label and increased real-message count on the public site |
+| Complex live questions/repetitions → correct groups/transcript | Not verified | Basic question/summary flow is verified; still compare repeated/multiple live questions against groups/metrics/transcript |
+| Actual hosted announcement and live summary spoken | Verified | Owner confirmed both announcement and generated summary are audible on the public site |
 | Firefox dashboard opens | Verified | User reported “Dashboard works and both announcements are audible” |
 | Firefox enable test announcement and demo summary audible | Verified | Same user report after Enable Speech → Load Demo Batch → Generate summary now |
 | Native Pause/Resume/Repeat, Stop/Disable and silence afterwards | Not verified | Listen while activating each; summaries after Stop must remain silent until Enable |
@@ -79,7 +80,8 @@ Record browser/version, local voice and output device with each new result. User
 | Final public frontend/callback settings | Verified | After Blueprint update, hosted OAuth start returned 302 with the exact Cloudflare callback; probe did not follow it to Twitch |
 | Cloudflare callback saved in Twitch | Verified | Owner confirmed the exact additional callback was added and saved; actual hosted authorization is checked separately |
 | Cloudflare hosted demo/scheduler | Verified | Independent session passed 28-message grouping/questions, immediate summary/clearing and real five-second scheduled generation through the public Worker; its session was removed |
-| Public HTTPS/Twitch login, cookie flow, chat and speech | Not verified | Must test on the actual deployed Worker URL after configuring Render and Twitch |
+| Public HTTPS/Twitch login and subscription | Verified | HTTP/proxy/callback checks passed; owner authorized on the deployed Worker URL and reported Listening for chat |
+| Public real-message delivery and speech | Verified | Owner separately confirmed incoming question/counter and audible announcement/generated summary on the hosted origin |
 | Durable session store / production hardening | Not verified | Preview still uses one in-memory backend instance; restarts log out users |
 
 ## Demo video and Devpost preparation

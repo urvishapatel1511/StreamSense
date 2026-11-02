@@ -2,7 +2,7 @@
 
 Updated: 2 November 2026 (Asia/Calcutta)
 
-Current implementation: Milestone 5 integration, reliability and release preparation. The user confirmed real Twitch message appearance/counter growth and Firefox dashboard/test-announcement/demo-summary audio during this milestone. Live-source spoken summaries, the remaining native speech controls, Narrator and the full keyboard/zoom walkthrough remain open. Earlier milestone sections are historical records; the Milestone 5 section below and RELEASE_CHECKLIST.md describe current evidence.
+Current implementation: Milestone 5 plus public Cloudflare/free-Render deployment. The owner has confirmed hosted Twitch authorization/Listening, actual message/counter delivery and audible test/generated-summary speech. Remaining native speech controls, complex live grouping checks, Narrator and the full keyboard/zoom walkthrough remain open. Earlier milestone sections are historical records; the hosted verification sections below and RELEASE_CHECKLIST.md describe current evidence.
 
 ## Milestone 1 — Project foundation
 
@@ -524,6 +524,12 @@ The actual public FRONTEND_URL and TWITCH_REDIRECT_URI are now declared in rende
 After pushing the public Blueprint settings in `11795f8`, a fresh hosted OAuth probe returned the exact Cloudflare callback, confirming the public-origin configuration is active. The isolated `STREAMSENSE_VERIFY_URL=https://streamsense.streamsense.workers.dev` demo check then passed: 28 demo inputs, Busy activity, correct question/repetition metrics, manual generation while paused, independent clearing, actual five-second scheduling and private-session cleanup. The owner subsequently confirmed Render updated and Live and the callback added and saved in Twitch. Public-origin settings and callback registration are complete; actual hosted authorization/chat/audio are checked separately.
 
 No paid Containers or paid-plan change was made. Source credential scans still pass, including ignored Wrangler/secret-file paths. No live Twitch credentials or browser session were used by the hosted HTTP checks.
+
+## Hosted Twitch authorization — owner verified
+
+The owner opened `https://streamsense.streamsense.workers.dev` in the requested Firefox flow, completed Connect Twitch/authorization and reported **Listening for chat**. This is human-reported evidence that hosted OAuth and the enabled EventSub subscription are working; it is not an agent-observed browser exchange and does not alone establish real-message delivery. The earlier Milestone 5 message/counter and Firefox demo-audio confirmations were local checks. No private cookie, password, authorization code or token was requested.
+
+In separate follow-up checks on the public site, the owner manually sent “What game is this?” in their own channel and answered **Yes, message and counter verified** for exact appearance/TWITCH label/increased real count. After Enable Speech and Generate summary now (or Repeat if already generated), the owner answered **Yes, announcement and summary are audible**. Record the basic hosted OAuth → real chat → generated spoken summary flow as human-verified, separate from mocks and isolated HTTP demo checks. Native Pause/Resume/Stop, broader live grouping accuracy, Narrator/keyboard/zoom and full accessibility compliance are not established by these results.
 
 ## Further work
 

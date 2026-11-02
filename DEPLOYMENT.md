@@ -8,7 +8,7 @@ Selected target: a **free Cloudflare Worker public address + one free Render Nod
 - Render backend: **https://streamsense-bgqp.onrender.com**
 - Twitch callback: **https://streamsense.streamsense.workers.dev/auth/twitch/callback**
 
-Cloudflare deployment succeeded; dashboard HTML, JavaScript and proxied health returned HTTP 200. Isolated 28-message demo/scheduler checks passed through both service addresses. The live backend now returns the exact Cloudflare callback, confirming its public-origin settings are active. The owner must still register that callback in Twitch and complete actual authorization/chat/audio acceptance on this origin. HTTP checks do not establish those human checks.
+Cloudflare deployment succeeded; dashboard HTML, JavaScript and proxied health returned HTTP 200. Isolated 28-message demo/scheduler checks passed through both service addresses. The owner confirmed the registered callback and public authorization/Listening state, then independently confirmed actual question/counter delivery and audible test/generated-summary speech. This establishes the basic hosted flow through human reports, not agent-observed browser/audio output. The remaining native controls, broader live-grouping accuracy and accessibility checks stay open.
 
 ## What is prepared
 
