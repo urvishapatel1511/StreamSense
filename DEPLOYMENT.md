@@ -8,7 +8,7 @@ Selected target: a **free Cloudflare Worker public address + one free Render Nod
 - Render backend: **https://streamsense-bgqp.onrender.com**
 - Twitch callback: **https://streamsense.streamsense.workers.dev/auth/twitch/callback**
 
-Cloudflare deployment succeeded and its proxied health endpoint returned HTTP 200. Render's dashboard/health and an isolated 28-message demo/scheduler check passed. Render's final frontend/callback settings and Twitch's registered callback must be confirmed before the full public login/control flow is accepted. Browser rendering, native audio and real Twitch delivery on this hosted origin remain separate manual checks.
+Cloudflare deployment succeeded; dashboard HTML, JavaScript and proxied health returned HTTP 200. Isolated 28-message demo/scheduler checks passed through both service addresses. The live backend now returns the exact Cloudflare callback, confirming its public-origin settings are active. The owner must still register that callback in Twitch and complete actual authorization/chat/audio acceptance on this origin. HTTP checks do not establish those human checks.
 
 ## What is prepared
 

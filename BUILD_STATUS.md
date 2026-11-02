@@ -521,6 +521,8 @@ A private hosted OAuth probe found configured true with no missing settings, ret
 
 The actual public FRONTEND_URL and TWITCH_REDIRECT_URI are now declared in render.yaml so the owner's GitHub-linked Blueprint can sync them without a separate Render API credential. Public settings only were added; existing private Twitch values remain sync:false. Automatic Blueprint sync/deployment and the final public callback are checked separately after pushing; publishing source alone does not prove the live configuration changed.
 
+After pushing the public Blueprint settings in `11795f8`, a fresh hosted OAuth probe returned the exact Cloudflare callback, confirming the public-origin configuration is active. The isolated `STREAMSENSE_VERIFY_URL=https://streamsense.streamsense.workers.dev` demo check then passed: 28 demo inputs, Busy activity, correct question/repetition metrics, manual generation while paused, independent clearing, actual five-second scheduling and private-session cleanup. The owner subsequently confirmed Render updated and Live and the callback added and saved in Twitch. Public-origin settings and callback registration are complete; actual hosted authorization/chat/audio are checked separately.
+
 No paid Containers or paid-plan change was made. Source credential scans still pass, including ignored Wrangler/secret-file paths. No live Twitch credentials or browser session were used by the hosted HTTP checks.
 
 ## Further work

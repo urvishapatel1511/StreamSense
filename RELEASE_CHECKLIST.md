@@ -76,7 +76,9 @@ Record browser/version, local voice and output device with each new result. User
 | Cloudflare Worker packaging | Verified | Wrangler 4.156.1 dry-run bundled the proxy; no account login, resources or deployment |
 | Render and Cloudflare deployments | Verified | Owner deployed https://streamsense-bgqp.onrender.com; authorized CLI published https://streamsense.streamsense.workers.dev. Dashboard/JS/health returned 200 through Cloudflare |
 | Hosted Render demo/scheduler | Verified | Separate anonymous session passed 28-message analysis/clearing and real five-second scheduling; session removed |
-| Final public frontend/callback settings | Not verified | Latest OAuth probe still used the Render callback. Owner has been asked to set Cloudflare FRONTEND_URL/TWITCH_REDIRECT_URI and save/deploy |
+| Final public frontend/callback settings | Verified | After Blueprint update, hosted OAuth start returned 302 with the exact Cloudflare callback; probe did not follow it to Twitch |
+| Cloudflare callback saved in Twitch | Verified | Owner confirmed the exact additional callback was added and saved; actual hosted authorization is checked separately |
+| Cloudflare hosted demo/scheduler | Verified | Independent session passed 28-message grouping/questions, immediate summary/clearing and real five-second scheduled generation through the public Worker; its session was removed |
 | Public HTTPS/Twitch login, cookie flow, chat and speech | Not verified | Must test on the actual deployed Worker URL after configuring Render and Twitch |
 | Durable session store / production hardening | Not verified | Preview still uses one in-memory backend instance; restarts log out users |
 
